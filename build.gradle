@@ -1,0 +1,71 @@
+import org.teavm.gradle.api.JSModuleType
+import org.teavm.gradle.api.OptimizationLevel
+
+plugins {
+    id "java-library"
+    id "base.base-conventions"
+    id "base.checkstyle"
+    id "org.teavm" version "0.17.0-dev-2"
+}
+
+checkstyle {
+    sourceSets = [sourceSets.main]
+}
+
+sourceSets {
+    teavm
+
+    teavm.compileClasspath += main.output + main.compileClasspath
+    teavm.runtimeClasspath += teavm.compileClasspath
+}
+
+configurations {
+    teavmAnnotationProcessor.extendsFrom annotationProcessor
+}
+
+repositories {
+    maven {
+        name = "TeaVM"
+        url = "https://teavm.org/maven/repository"
+
+        content {
+            includeGroup "org.teavm"
+        }
+    }
+}
+
+dependencies {
+    teavmCompileOnly "org.teavm:teavm-core:0.17.0-dev-2"
+
+    implementation "org.apache.commons:commons-lang3:3.21.0"
+    implementation "net.raphimc:NoteBlockLib:3.4.0"
+    implementation "net.raphimc:audio-mixer:3.1.0"
+    implementation "org.jcraft:jorbis:0.0.17"
+    implementation "com.plasmoverse:concentus:1.0.0"
+    implementation "io.github.raphimc:jump3r:1.0.6"
+    implementation "io.github.raphimc:libflac-java:1.4.3.1"
+}
+
+teavm {
+    all {
+        mainClass = "net.raphimc.noteblockrenderer.NoteBlockRenderer"
+    }
+    js {
+        def production = providers.gradleProperty("environment").map { it == "prod" }.orElse(false)
+        targetFileName = "backend.js"
+        moduleType = JSModuleType.ES2015
+        optimization = production.map { it ? OptimizationLevel.AGGRESSIVE : OptimizationLevel.NONE }
+        obfuscated = production
+    }
+}
+
+tasks.register("copyBackendJs", Copy) {
+    from(tasks.named("generateJavaScript")) {
+        include("backend.js")
+    }
+    into(layout.projectDirectory.dir("frontend/src/generated"))
+}
+
+tasks.named("build") {
+    dependsOn(tasks.named("copyBackendJs"))
+}

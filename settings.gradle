@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            name = "TeaVM"
+            url = "https://teavm.org/maven/repository"
+
+            content {
+                includeGroup "org.teavm"
+            }
+        }
+    }
+}
+
+plugins {
+    id "org.gradle.toolchains.foojay-resolver-convention" version "1.0.0"
+}
+
+rootProject.name = "NoteBlockRenderer"

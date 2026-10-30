@@ -1,0 +1,33 @@
+{
+  "name": "noteblockrenderer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "format": "eslint . --fix && prettier --write .",
+    "format:check": "eslint . && prettier --check .",
+    "check": "npm run format:check && svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json && tsc -p tsconfig.worker.json",
+    "build": "npm run check && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@lucide/svelte": "1.62.0",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "@tailwindcss/vite": "4.3.3",
+    "@tsconfig/svelte": "5.0.8",
+    "@types/node": "26.6.5",
+    "@typescript-eslint/parser": "8.72.1",
+    "daisyui": "5.7.50",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-svelte": "4.1.1",
+    "prettier-plugin-tailwindcss": "0.8.1",
+    "svelte": "5.57.2",
+    "svelte-check": "4.7.7",
+    "svelte-eslint-parser": "1.10.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3",
+    "vite": "8.3.5"
+  }
+}

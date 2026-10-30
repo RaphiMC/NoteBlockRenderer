@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+    themes: false;
+    include: rootcolor, rootscrolllock, rootscrollgutter, scrollbar, button, input, select, progress, badge, alert, card, collapse, status, modal, stat, fieldset, label, navbar;
+}
+
+@plugin "daisyui/theme" {
+    name: "noteblock";
+    default: true;
+    color-scheme: dark;
+    --color-base-100: #151920;
+    --color-base-200: #0f141c;
+    --color-base-300: #272e39;
+    --color-base-content: #edf1f7;
+    --color-primary: #91bcff;
+    --color-primary-content: #10213b;
+    --color-secondary: #202630;
+    --color-secondary-content: #d4dce8;
+    --color-neutral: #0d1015;
+    --color-neutral-content: #edf1f7;
+    --color-info: #8bbaff;
+    --color-info-content: #10213b;
+    --color-success: #80d3ac;
+    --color-success-content: #10231c;
+    --color-warning: #e9c078;
+    --color-warning-content: #2c251b;
+    --color-error: #f49b9b;
+    --color-error-content: #2e1b1e;
+    --radius-selector: 0.25rem;
+    --radius-field: 0.5rem;
+    --radius-box: 0.75rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 0;
+    --noise: 0;
+}
+
+@theme {
+    --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@layer base {
+    :root {
+        --root-bg: var(--color-neutral);
+    }
+
+    body {
+        @apply min-h-svh text-sm text-base-content antialiased;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+    }
+
+    fieldset {
+        min-width: 0;
+    }
+
+    ::selection {
+        @apply bg-primary/30 text-base-content;
+    }
+}
+
+:where(button, a, input, select, summary):focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+@layer components {
+    .panel {
+        @apply min-w-0 rounded-box border border-base-300 bg-base-100;
+    }
+
+    .form-grid {
+        @apply grid gap-4 sm:grid-cols-2;
+    }
+
+    .state-panel {
+        @apply min-h-96 items-center justify-center gap-4 p-8 text-center;
+    }
+
+    .loader-art {
+        @apply relative mb-2 grid size-20 place-items-center text-primary;
+    }
+
+    .loader-art::before {
+        @apply absolute inset-0 animate-spin rounded-full border-2 border-primary/20 border-t-primary;
+        content: "";
+    }
+
+    .loader-art .lucide {
+        @apply size-6;
+    }
+
+    .icon-box {
+        @apply grid size-16 shrink-0 place-items-center rounded-box bg-primary/10 text-primary;
+    }
+
+    .icon-box .lucide {
+        @apply size-8;
+    }
+
+    .lucide {
+        @apply inline-block size-5 shrink-0;
+        stroke-width: 1.6;
+    }
+
+    .btn .lucide {
+        @apply size-4;
+    }
+
+    .eyebrow {
+        @apply text-xs font-semibold tracking-widest text-base-content/55;
+    }
+}
+
+@layer utilities {
+    :is(.input, .select):enabled {
+        @apply border-primary/25 bg-neutral outline-primary;
+    }
+
+    select.select {
+        appearance: none;
+    }
+
+    select.select::picker(select) {
+        appearance: auto;
+    }
+
+    .render-dialog {
+        .modal-box {
+            @apply flex max-h-full w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-primary/20 p-0 shadow-2xl;
+        }
+
+        .dialog-header {
+            @apply flex shrink-0 items-start justify-between gap-4 border-b border-base-300 p-6;
+        }
+
+        .render-form {
+            @apply flex min-h-0 flex-col;
+        }
+
+        .dialog-settings {
+            @apply min-h-0 overflow-y-auto overscroll-contain p-6;
+        }
+
+        .render-options > .fieldset:not(:last-child) {
+            @apply border-b border-base-300 pb-4;
+        }
+
+        .dialog-footer {
+            @apply shrink-0 border-t border-base-300 bg-base-200 p-6;
+        }
+
+        .render-result {
+            @apply grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4;
+        }
+    }
+}
+
+/* Show frequent worker updates immediately instead of animating each one. */
+#render-progress::-webkit-progress-value {
+    transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+
+    .loader-art::before {
+        border-style: dotted;
+    }
+}
