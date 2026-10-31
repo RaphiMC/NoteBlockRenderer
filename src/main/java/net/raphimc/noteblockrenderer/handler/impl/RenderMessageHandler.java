@@ -85,7 +85,7 @@ public class RenderMessageHandler extends MessageHandler<RenderMessage> {
         final SeekableByteArrayOutputStream output = new SeekableByteArrayOutputStream();
         try (AudioOutputStream audioOutputStream = switch (message.getAudioFileOptions().getFormat()) {
             case "wav" -> {
-                renderFinishedMessage.setFileExtension("wav");
+                renderFinishedMessage.setFileName(song.getTitleOrFileName() + ".wav");
                 renderFinishedMessage.setMimeType("audio/wav");
                 final RenderMessage.WavAudioFileOptions wavAudioFileOptions = (RenderMessage.WavAudioFileOptions) message.getAudioFileOptions();
                 final PcmSampleEncoding encoding = switch (wavAudioFileOptions.getEncoding()) {
@@ -99,7 +99,7 @@ public class RenderMessageHandler extends MessageHandler<RenderMessage> {
                 yield new WavPcmAudioOutputStream(new BufferedOutputStream(output), buffer.format(), encoding, buffer.sampleCount());
             }
             case "flac" -> {
-                renderFinishedMessage.setFileExtension("flac");
+                renderFinishedMessage.setFileName(song.getTitleOrFileName() + ".flac");
                 renderFinishedMessage.setMimeType("audio/flac");
                 final RenderMessage.FlacAudioFileOptions flacAudioFileOptions = (RenderMessage.FlacAudioFileOptions) message.getAudioFileOptions();
                 final FlacAudioOutputStream.Encoding encoding = new FlacAudioOutputStream.Encoding(flacAudioFileOptions.getBitsPerSample(), flacAudioFileOptions.getCompressionLevel());
@@ -117,7 +117,7 @@ public class RenderMessageHandler extends MessageHandler<RenderMessage> {
                 yield new FlacAudioOutputStream(new SeekableBufferedOutputStream(output), buffer.format(), encoding, tags);
             }
             case "mp3" -> {
-                renderFinishedMessage.setFileExtension("mp3");
+                renderFinishedMessage.setFileName(song.getTitleOrFileName() + ".mp3");
                 renderFinishedMessage.setMimeType("audio/mpeg");
                 final RenderMessage.Mp3AudioFileOptions mp3AudioFileOptions = (RenderMessage.Mp3AudioFileOptions) message.getAudioFileOptions();
                 final Mp3AudioOutputStream.Encoding encoding = switch (mp3AudioFileOptions.getEncoding()) {
@@ -134,7 +134,7 @@ public class RenderMessageHandler extends MessageHandler<RenderMessage> {
                 yield new Mp3AudioOutputStream(new SeekableBufferedOutputStream(output), buffer.format(), encoding, id3Tags);
             }
             case "ogg-opus" -> {
-                renderFinishedMessage.setFileExtension("opus");
+                renderFinishedMessage.setFileName(song.getTitleOrFileName() + ".opus");
                 renderFinishedMessage.setMimeType("audio/ogg");
                 final RenderMessage.OggOpusAudioFileOptions oggOpusAudioFileOptions = (RenderMessage.OggOpusAudioFileOptions) message.getAudioFileOptions();
                 final OggOpusAudioOutputStream.Encoding encoding = switch (oggOpusAudioFileOptions.getEncoding()) {

@@ -44,7 +44,7 @@ export interface ErrorMessage extends Message {
 export interface RenderFinishedMessage extends Message {
     type: "render-finished";
     data: Int8Array<ArrayBuffer>;
-    fileExtension: string;
+    fileName: string;
     mimeType: string;
 }
 

@@ -101,9 +101,8 @@ function failRendering(message: string): void {
     showError(message);
 }
 
-function finishRendering({data, fileExtension, mimeType}: RenderFinishedMessage, source: SongSource): void {
+function finishRendering({data, fileName, mimeType}: RenderFinishedMessage): void {
     const blob = new Blob([data], {type: mimeType});
-    const fileName = `${source.name.replace(/\.nbs$/i, "")}.${fileExtension}`;
     state.result = {url: URL.createObjectURL(blob), fileName, size: blob.size};
     state.progress = 100;
     state.rendering = false;
@@ -125,9 +124,9 @@ function handleMessage(data: WorkerResponse): void {
         setStatus(data.message, "warning");
     } else if (data.type === "render-progress" && state.phase === "rendering") {
         state.progress = data.progress;
-    } else if (data.type === "render-finished" && state.rendering && state.source) {
+    } else if (data.type === "render-finished" && state.rendering) {
         try {
-            finishRendering(data, state.source);
+            finishRendering(data);
         } catch (error) {
             console.error("Could not prepare the audio download.", error);
             clearRender();

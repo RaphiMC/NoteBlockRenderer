@@ -25,6 +25,15 @@ configurations {
 
 repositories {
     maven {
+        name = "Lenni0451"
+        url = "https://maven.lenni0451.net/snapshots"
+
+        content {
+            includeGroupByRegex "net\\.lenni0451(\\..+)?"
+            includeGroupByRegex "net\\.raphimc(\\..+)?"
+        }
+    }
+    maven {
         name = "TeaVM"
         url = "https://teavm.org/maven/repository"
 
@@ -38,7 +47,7 @@ dependencies {
     teavmCompileOnly "org.teavm:teavm-core:0.17.0-dev-2"
 
     implementation "org.apache.commons:commons-lang3:3.21.0"
-    implementation "net.raphimc:NoteBlockLib:3.4.0"
+    implementation "net.raphimc:NoteBlockLib:3.4.1-20261031.120032-2"
     implementation "net.raphimc:audio-mixer:3.1.0"
     implementation "org.jcraft:jorbis:0.0.17"
     implementation "com.plasmoverse:concentus:1.0.0"

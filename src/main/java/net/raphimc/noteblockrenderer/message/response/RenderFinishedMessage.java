@@ -34,7 +34,7 @@ public interface RenderFinishedMessage extends Message {
     void setData(@JSByRef(optional = true) final byte[] data);
 
     @JSProperty
-    void setFileExtension(final String fileExtension);
+    void setFileName(final String fileName);
 
     @JSProperty
     void setMimeType(final String mimeType);
