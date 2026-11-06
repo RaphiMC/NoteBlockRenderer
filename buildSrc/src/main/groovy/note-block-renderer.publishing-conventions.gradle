@@ -1,0 +1,33 @@
+plugins {
+    id "base.publishing-conventions"
+    id "base.maven-central-publishing"
+    id "base.lenni0451-maven-publishing"
+}
+
+publishing {
+    publications {
+        mavenJava {
+            pom {
+                name = "NoteBlockRenderer"
+                description = "Library for rendering Minecraft Note Block songs"
+                url = "https://github.com/RaphiMC/NoteBlockRenderer"
+                licenses {
+                    license {
+                        name = "LGPL-3.0 License"
+                        url = "https://github.com/RaphiMC/NoteBlockRenderer/blob/main/LICENSE"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "RK_01"
+                    }
+                }
+                scm {
+                    connection = "scm:git:git://github.com/RaphiMC/NoteBlockRenderer.git"
+                    developerConnection = "scm:git:ssh://github.com/RaphiMC/NoteBlockRenderer.git"
+                    url = "https://github.com/RaphiMC/NoteBlockRenderer.git"
+                }
+            }
+        }
+    }
+}

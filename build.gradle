@@ -1,0 +1,28 @@
+plugins {
+    id "java-library"
+    id "base.base-conventions"
+    id "base.checkstyle"
+    id "base.example-sourceset"
+    id "note-block-renderer.publishing-conventions"
+}
+
+repositories {
+    maven {
+        name = "Lenni0451"
+        url = "https://maven.lenni0451.net/snapshots"
+
+        content {
+            includeGroupByRegex "net\\.lenni0451(\\..+)?"
+            includeGroupByRegex "net\\.raphimc(\\..+)?"
+        }
+    }
+}
+
+dependencies {
+    api "net.raphimc:NoteBlockLib:3.4.1-20261107.200316-4"
+    api "net.raphimc:audio-mixer:3.1.1-20261107.220255-1"
+    api "org.jcraft:jorbis:0.0.17"
+    api "com.plasmoverse:concentus:1.0.0"
+    api "io.github.raphimc:jump3r:1.0.6"
+    api "io.github.raphimc:libflac-java:1.4.3.1"
+}
