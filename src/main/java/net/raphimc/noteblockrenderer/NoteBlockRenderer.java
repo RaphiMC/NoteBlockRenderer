@@ -36,6 +36,14 @@ public class NoteBlockRenderer extends AudioMixerNoteBlockRenderer {
         super(song, new AudioMixer(audioFormat), soundProvider, options);
     }
 
+    public NoteBlockRenderer(final Song song, final AudioMixer audioMixer, final SoundProvider soundProvider) {
+        this(song, audioMixer, soundProvider, new Options());
+    }
+
+    public NoteBlockRenderer(final Song song, final AudioMixer audioMixer, final SoundProvider soundProvider, final Options options) {
+        super(song, audioMixer, soundProvider, options);
+    }
+
     public AudioBuffer renderFully(final FloatConsumer progressConsumer) {
         return this.renderFully(progressConsumer, 90F);
     }

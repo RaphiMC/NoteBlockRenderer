@@ -29,6 +29,8 @@ import javax.sound.sampled.SourceDataLine;
 
 public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements AutoCloseable {
 
+    private static final int DEFAULT_BUFFER_MILLIS = 50;
+
     private final SourceDataLineWriter sourceDataLineWriter;
     private final AudioBuffer silenceBuffer;
     private boolean paused = true;
@@ -38,7 +40,7 @@ public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements Auto
     }
 
     public NoteBlockPlayer(final SourceDataLine sourceDataLine, final Song song, final SoundProvider soundProvider, final Options options) throws LineUnavailableException {
-        this(sourceDataLine, song, soundProvider, options, 50);
+        this(sourceDataLine, song, soundProvider, options, DEFAULT_BUFFER_MILLIS);
     }
 
     public NoteBlockPlayer(final SourceDataLine sourceDataLine, final Song song, final SoundProvider soundProvider, final Options options, final int bufferMillis) throws LineUnavailableException {
