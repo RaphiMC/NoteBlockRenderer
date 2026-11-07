@@ -87,6 +87,10 @@ public abstract class AudioMixerNoteBlockRenderer extends SongRenderer<AudioBuff
 
     public void preRenderMostUsedNotes(final FloatConsumer progressConsumer, final long maxMemorySize) {
         this.preRenderedNotes.clear();
+        if (maxMemorySize <= 0L) {
+            progressConsumer.accept(100F);
+            return;
+        }
         final List<Note> notesByFrequency = this.getSong().getNotes().getTicks().stream()
             .map(tick -> this.getSong().getNotes().get(tick))
             .flatMap(Collection::stream)
@@ -99,17 +103,20 @@ public abstract class AudioMixerNoteBlockRenderer extends SongRenderer<AudioBuff
             .toList();
 
         long usedMemory = 0L;
+        int processedNotes = 0;
         for (Note note : notesByFrequency) {
             final AudioSource source = this.createNoteAudioSource(note);
             final int frameCount = this.rootMixer.getFormat().millisToFrameCount(source.getRemainingMillisecondLength());
             final long requiredMemory = (long) frameCount * this.rootMixer.getFormat().channelCount() * Float.BYTES;
-            if (usedMemory + requiredMemory <= maxMemorySize) {
+            if (requiredMemory <= maxMemorySize - usedMemory) {
                 final AudioBuffer result = new AudioBuffer(this.rootMixer.getFormat(), frameCount);
                 source.render(result);
                 this.preRenderedNotes.put(note, result);
                 usedMemory += requiredMemory;
-                progressConsumer.accept((float) usedMemory / maxMemorySize * 100F);
             }
+            final float noteProgress = (float) ++processedNotes / notesByFrequency.size();
+            final float memoryProgress = (float) usedMemory / maxMemorySize;
+            progressConsumer.accept(Math.max(noteProgress, memoryProgress) * 100F);
         }
         progressConsumer.accept(100F);
     }
