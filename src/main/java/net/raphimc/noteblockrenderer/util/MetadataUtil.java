@@ -26,7 +26,7 @@ import java.util.Map;
 
 public final class MetadataUtil {
 
-    private static final String RENDERER = "https://github.com/RaphiMC/NoteBlockRenderer";
+    private static final String RENDERER = "NoteBlockRenderer";
 
     private MetadataUtil() {
     }
