@@ -17,61 +17,17 @@
  */
 package net.raphimc.noteblockrenderer.provider.impl;
 
-import net.raphimc.noteblocklib.format.minecraft.MinecraftInstrument;
-import net.raphimc.noteblocklib.format.nbs.model.NbsCustomInstrument;
-import net.raphimc.noteblocklib.model.note.Instrument;
-import net.raphimc.noteblockrenderer.provider.SoundProvider;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.UUID;
 
-public class NoteBlockStudioSoundProvider implements SoundProvider {
-
-    private final Path basePath;
+public class NoteBlockStudioSoundProvider extends DirectorySoundProvider {
 
     public NoteBlockStudioSoundProvider() {
-        this(getSystemBasePath());
+        super(getBasePath());
     }
 
-    public NoteBlockStudioSoundProvider(final String basePath) {
-        this(Path.of(basePath));
-    }
-
-    public NoteBlockStudioSoundProvider(final File basePath) {
-        this(basePath.toPath());
-    }
-
-    public NoteBlockStudioSoundProvider(final Path basePath) {
-        this.basePath = basePath.toAbsolutePath().normalize();
-    }
-
-    @Override
-    public InputStream getSoundInputStream(final Instrument instrument) throws IOException {
-        final Path soundFile = this.basePath.resolve(getInstrumentSoundPath(instrument)).normalize();
-        if (!soundFile.startsWith(this.basePath)) {
-            throw new IOException("Sound path is outside of base path: " + soundFile);
-        }
-        if (!Files.isRegularFile(soundFile)) {
-            throw new IOException("Failed to find sound file at path: " + soundFile);
-        }
-        return Files.newInputStream(soundFile);
-    }
-
-    private static String getInstrumentSoundPath(final Instrument instrument) throws IOException {
-        if (instrument instanceof MinecraftInstrument minecraftInstrument) {
-            return "minecraft/" + minecraftInstrument.mcSoundPath() + ".ogg";
-        } else if (instrument instanceof NbsCustomInstrument customInstrument) {
-            return customInstrument.getSoundFilePathOr("").replace('\\', '/');
-        }
-        throw new IOException("Unsupported instrument type: " + instrument.getClass().getName());
-    }
-
-    private static Path getSystemBasePath() {
+    private static Path getBasePath() {
         final String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
         if (osName.startsWith("windows")) {
             return Path.of(System.getProperty("user.home"), "Minecraft Note Block Studio", "Data", "Sounds");
