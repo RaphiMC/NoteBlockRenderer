@@ -29,11 +29,11 @@ A ``SoundProvider`` supplies the sound samples used for instruments. The followi
 - ``NoteBlockStudioSoundProvider`` loads sounds from the default Minecraft Note Block Studio sound directory for the current operating system. Use ``DirectorySoundProvider`` for a custom directory.
 - ``DirectorySoundProvider`` loads sounds from a local directory, passed as a ``String``, ``File`` or ``Path``.
 - ``ResourceSoundProvider`` loads sounds from classpath resources, such as files bundled in your application's JAR. It defaults to the classpath root.
-- ``MapSoundProvider`` loads sounds from a ``Map<Instrument, byte[]>`` supplied to its constructor.
+- ``MapSoundProvider`` loads sounds from a ``Map<String, byte[]>`` supplied to its constructor.
 - ``UrlSoundProvider`` downloads Minecraft instrument sounds from a Minecraft assets repository by default. You can pass a different base URL to its constructor.
 - ``NoOpSoundProvider`` supplies no sounds and throws an ``IOException`` for every request. Can be used as the last provider in a chain to get a clear error message if a sound is missing.
 
-``DirectorySoundProvider`` and ``ResourceSoundProvider`` look up Minecraft sounds at ``minecraft/<mcSoundPath>.ogg`` relative to their base path.
+``DirectorySoundProvider``, ``ResourceSoundProvider`` and ``MapSoundProvider`` look up Minecraft sounds at ``minecraft/<mcSoundPath>.ogg`` relative to their base path.
 
 You can chain providers using ``first.then(second)``. The second provider is used if the first provider throws an ``IOException`` while loading the requested sound sample. For example, try Note Block Studio sounds first, then bundled resources, and finally download missing Minecraft sounds:
 

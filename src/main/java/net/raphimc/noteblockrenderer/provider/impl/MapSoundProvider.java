@@ -17,6 +17,8 @@
  */
 package net.raphimc.noteblockrenderer.provider.impl;
 
+import net.raphimc.noteblocklib.format.minecraft.MinecraftInstrument;
+import net.raphimc.noteblocklib.format.nbs.model.NbsCustomInstrument;
 import net.raphimc.noteblocklib.model.note.Instrument;
 import net.raphimc.noteblockrenderer.provider.SoundProvider;
 
@@ -28,19 +30,29 @@ import java.util.Map;
 
 public class MapSoundProvider implements SoundProvider {
 
-    private final Map<Instrument, byte[]> sounds;
+    private final Map<String, byte[]> sounds;
 
-    public MapSoundProvider(final Map<Instrument, byte[]> sounds) {
+    public MapSoundProvider(final Map<String, byte[]> sounds) {
         this.sounds = new HashMap<>(sounds);
     }
 
     @Override
     public InputStream getSoundInputStream(final Instrument instrument) throws IOException {
-        if (this.sounds.containsKey(instrument)) {
-            return new ByteArrayInputStream(this.sounds.get(instrument));
-        } else {
-            throw new IOException("Missing sound sample");
+        final String soundPath = getInstrumentSoundPath(instrument);
+        final byte[] sound = this.sounds.get(soundPath);
+        if (sound == null) {
+            throw new IOException("Missing sound sample: " + soundPath);
         }
+        return new ByteArrayInputStream(sound);
+    }
+
+    private static String getInstrumentSoundPath(final Instrument instrument) throws IOException {
+        if (instrument instanceof MinecraftInstrument minecraftInstrument) {
+            return "minecraft/" + minecraftInstrument.mcSoundPath() + ".ogg";
+        } else if (instrument instanceof NbsCustomInstrument customInstrument) {
+            return customInstrument.getSoundFilePathOr("").replace('\\', '/');
+        }
+        throw new IOException("Unsupported instrument type: " + instrument.getClass().getName());
     }
 
 }

@@ -45,7 +45,7 @@ public class ResourceSoundProvider implements SoundProvider {
         }
         final InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(this.basePath + soundPath);
         if (inputStream == null) {
-            throw new IOException("Resource not found: " + this.basePath + soundPath);
+            throw new IOException("Missing sound sample: " + this.basePath + soundPath);
         }
         return inputStream;
     }

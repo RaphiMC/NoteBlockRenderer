@@ -51,7 +51,7 @@ public class DirectorySoundProvider implements SoundProvider {
             throw new IOException("Sound path is outside of base path: " + soundFile);
         }
         if (!Files.isRegularFile(soundFile)) {
-            throw new IOException("Failed to find sound file at path: " + soundFile);
+            throw new IOException("Missing sound sample: " + soundFile);
         }
         return Files.newInputStream(soundFile);
     }
