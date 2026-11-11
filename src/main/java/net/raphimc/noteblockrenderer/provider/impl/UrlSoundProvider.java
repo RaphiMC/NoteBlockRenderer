@@ -62,6 +62,8 @@ public class UrlSoundProvider implements SoundProvider {
             final String normalizedPath = customInstrument.getSoundFilePathOr("").replace('\\', '/');
             if (normalizedPath.startsWith("minecraft/")) {
                 return normalizedPath.substring(10);
+            } else {
+                throw new IOException("Unsupported custom instrument path: " + normalizedPath);
             }
         }
         throw new IOException("Unsupported instrument type: " + instrument.getClass().getName());
