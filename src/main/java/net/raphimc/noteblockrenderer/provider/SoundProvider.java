@@ -36,15 +36,32 @@ public interface SoundProvider {
     }
 
     default SoundProvider then(final SoundProvider next) {
-        return instrument -> {
-            try {
-                return this.getSoundInputStream(instrument);
-            } catch (final IOException outer) {
+        return new SoundProvider() {
+            @Override
+            public InputStream getSoundInputStream(final Instrument instrument) throws IOException {
                 try {
-                    return next.getSoundInputStream(instrument);
-                } catch (final IOException inner) {
-                    inner.addSuppressed(outer);
-                    throw inner;
+                    return SoundProvider.this.getSoundInputStream(instrument);
+                } catch (final IOException outer) {
+                    try {
+                        return next.getSoundInputStream(instrument);
+                    } catch (final IOException inner) {
+                        inner.addSuppressed(outer);
+                        throw inner;
+                    }
+                }
+            }
+
+            @Override
+            public AudioBuffer getSoundBuffer(final Instrument instrument) throws IOException {
+                try {
+                    return SoundProvider.this.getSoundBuffer(instrument);
+                } catch (final IOException outer) {
+                    try {
+                        return next.getSoundBuffer(instrument);
+                    } catch (final IOException inner) {
+                        inner.addSuppressed(outer);
+                        throw inner;
+                    }
                 }
             }
         };
