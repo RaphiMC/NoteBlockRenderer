@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    api "net.raphimc:NoteBlockLib:3.4.1-20261107.200316-4"
+    api "net.raphimc:NoteBlockLib:3.4.1-20261113.201038-5"
     api "net.raphimc:audio-mixer:3.1.1-20261113.183116-2"
     api "org.jcraft:jorbis:0.0.17"
     api "com.plasmoverse:concentus:1.0.0"
