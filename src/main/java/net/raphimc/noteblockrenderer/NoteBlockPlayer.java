@@ -32,7 +32,6 @@ public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements Auto
     private static final int DEFAULT_BUFFER_MILLIS = 50;
 
     private final SourceDataLineWriter sourceDataLineWriter;
-    private final AudioBuffer silenceBuffer;
     private boolean paused = true;
 
     public NoteBlockPlayer(final SourceDataLine sourceDataLine, final Song song, final SoundProvider soundProvider) throws LineUnavailableException {
@@ -46,8 +45,6 @@ public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements Auto
     public NoteBlockPlayer(final SourceDataLine sourceDataLine, final Song song, final SoundProvider soundProvider, final Options options, final int bufferMillis) throws LineUnavailableException {
         super(song, new LimitingAudioMixer(JavaAudioFormatUtil.getAudioFormat(sourceDataLine.getFormat())), soundProvider, options);
         this.sourceDataLineWriter = new SourceDataLineWriter(sourceDataLine, bufferMillis, this::tick);
-        this.silenceBuffer = new AudioBuffer(this.getRootMixer().getFormat(), this.getRootMixer().getFormat().millisToFrameCount(100F));
-        this.sourceDataLineWriter.start();
     }
 
     @Override
@@ -55,7 +52,7 @@ public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements Auto
         if (!this.paused) {
             return super.tick();
         } else {
-            return this.silenceBuffer;
+            return new AudioBuffer(this.getRootMixer().getFormat(), 0);
         }
     }
 
