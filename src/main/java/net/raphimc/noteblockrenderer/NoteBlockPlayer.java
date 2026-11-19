@@ -20,7 +20,6 @@ package net.raphimc.noteblockrenderer;
 import net.raphimc.audiomixer.LimitingAudioMixer;
 import net.raphimc.audiomixer.util.JavaAudioFormatUtil;
 import net.raphimc.audiomixer.util.SourceDataLineWriter;
-import net.raphimc.audiomixer.util.buffer.AudioBuffer;
 import net.raphimc.noteblocklib.model.song.Song;
 import net.raphimc.noteblockrenderer.provider.SoundProvider;
 
@@ -29,10 +28,9 @@ import javax.sound.sampled.SourceDataLine;
 
 public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements AutoCloseable {
 
-    private static final int DEFAULT_BUFFER_MILLIS = 50;
+    private static final int DEFAULT_BUFFER_MILLIS = 100;
 
     private final SourceDataLineWriter sourceDataLineWriter;
-    private boolean paused = true;
 
     public NoteBlockPlayer(final SourceDataLine sourceDataLine, final Song song, final SoundProvider soundProvider) throws LineUnavailableException {
         this(sourceDataLine, song, soundProvider, new Options());
@@ -47,20 +45,11 @@ public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements Auto
         this.sourceDataLineWriter = new SourceDataLineWriter(sourceDataLine, bufferMillis, this::tick);
     }
 
-    @Override
-    public AudioBuffer tick() {
-        if (!this.paused) {
-            return super.tick();
-        } else {
-            return new AudioBuffer(this.getRootMixer().getFormat(), 0);
-        }
-    }
-
     /**
      * @return Whether the player is paused.
      */
     public boolean isPaused() {
-        return this.paused;
+        return !this.sourceDataLineWriter.isRunning();
     }
 
     /**
@@ -69,7 +58,11 @@ public class NoteBlockPlayer extends AudioMixerNoteBlockRenderer implements Auto
      * @param paused Whether the player should be paused.
      */
     public void setPaused(final boolean paused) {
-        this.paused = paused;
+        if (paused && !this.isPaused()) {
+            this.sourceDataLineWriter.stop();
+        } else if (!paused && this.isPaused()) {
+            this.sourceDataLineWriter.start();
+        }
     }
 
     @Override

@@ -44,24 +44,30 @@ public class NoteBlockRenderer extends AudioMixerNoteBlockRenderer {
         super(song, audioMixer, soundProvider, options);
     }
 
-    public AudioBuffer renderFully(final FloatConsumer progressConsumer) {
+    public AudioBuffer renderFully(final FloatConsumer progressConsumer) throws InterruptedException {
         return this.renderFully(progressConsumer, 90F);
     }
 
-    public AudioBuffer renderFully(final FloatConsumer progressConsumer, final float volume) {
+    public AudioBuffer renderFully(final FloatConsumer progressConsumer, final float volume) throws InterruptedException {
         return this.renderFully(progressConsumer, volume, Limiter.WINDOWED);
     }
 
-    public AudioBuffer renderFully(final FloatConsumer progressConsumer, final float volume, final Limiter limiter) {
+    public AudioBuffer renderFully(final FloatConsumer progressConsumer, final float volume, final Limiter limiter) throws InterruptedException {
         final int expectedSampleCount = this.getRootMixer().getFormat().millisToSampleCount((this.getSong().getLengthInSeconds() + 5) * 1000F);
         final AudioBufferBuilder bufferBuilder = new AudioBufferBuilder(this.getRootMixer().getFormat(), expectedSampleCount);
         while (!this.hasReachedEnd()) {
             bufferBuilder.append(this.tick());
             progressConsumer.accept(this.getProgress());
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
         }
         progressConsumer.accept(100F);
         while (!this.getMixer().isEmpty()) {
             bufferBuilder.append(this.render(1000F));
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
         }
         final AudioBuffer buffer = bufferBuilder.build().trimTrailingSilence();
         limiter.apply(buffer, volume);

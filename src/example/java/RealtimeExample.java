@@ -83,7 +83,7 @@ public final class RealtimeExample {
             positionSlider.setValue(player.getTick());
             listPanel.removeAll();
             listPanel.add(new JLabel("Position (tick): %,d / %,d".formatted(player.getTick(), player.getSong().getNotes().getLastTick())));
-            listPanel.add(new JLabel("Position (ms): %,d / %,d".formatted(player.getMillisecondPosition(), player.getSong().getLengthInSeconds() * 1000)));
+            listPanel.add(new JLabel("Position (ms): %,d / %,d".formatted(player.getMillisecondPosition(), player.getSong().getLengthInMilliseconds())));
             listPanel.add(new JLabel("Progress (%%): %,.02f / 100".formatted(player.getProgress())));
             listPanel.add(new JLabel("CPU load (%%): %,.0f / 100".formatted(player.getSourceDataLineWriter().getProcessingLoad())));
             listPanel.add(new JLabel("Simultaneous sounds: %,d".formatted(player.getMixer().size())));
